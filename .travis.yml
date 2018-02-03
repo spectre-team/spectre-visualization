@@ -3,10 +3,36 @@ python:
 - '3.4'
 - '3.5'
 - '3.6'
+sudo: required
+services:
+- docker
+env:
+  global:
+  - VERSION=1.0.0
+  - secure: hwLw7fGpyp/85HcirwHP8XCRryo6Bt+VgSM9nQoqosH0+wEbvczowuaeK7OIF0oZi0Z12cX/n/I4Dc/5GI4riqBc1uhQ9Tqadr3I//zDrnqAFjOxtv2vc+LWDOG2CPQpuilbDVQ1RZCrGScgbvo3q46aMGqxM0BY7Bhrg4bSyYKXD+H3lvXIihcRnvOLTfRFTLN0Ul8myqMoVIhozcKHSUBlqSZMsSg4f0OuWf03Y6XTF3noejdeZ/2d2CtVjYSDvBRaXGE0O5cRVNH7guGovqSfsnuPe7So+RUsgX3mtwrh/VDmOwdQV2f7hqV3hTsWqvbM/neVEokEwzWJK/YWIoXA0RH+lm1DmYJ3E8/t5gmfnWftVoGJ3O4eNf7Wxv9/2L55aAd4d2fMiD/FT03dAJCqX6fKcKeGPojWTz0SphiFIZT9hYcKBM0V4iGezHjVuOyHAB0jSUelkZU7HRvlD0nnuqRHoL9ua5A/rLdEXDBQ/qvbzzThzEWluzb51xO39L8wCORsxNZIMxXnVQlLoS6/GhTxcC6H3LB5jaGwHWOJKLYSgr6er5NusNtkUEqNRySU90hIoJtIw8H4/26cdnLFHyVkx7QuvmwjfVAv7O4WJrO3oNVi9lcm9rzWGwXt5cRu3Bst5NFpEI3kekFGrUEav/+OFORT+IO3WApRLYY=
+  - secure: xjQ2/8L4IXtiIhes8mawjyZd7CHwXzHvnplJlWgGMA6axfPUA0SF9JYvl5UMk1M3XLn3ZGTa5oD2M8bFjBkOavEoGxHgzKa6kB8MNvcUEfYAdVmU+HCr6tQDxcPJNnoRpHWRcGLUgq9d8Yc7Urlxpx++EIvJefIyn2Xy6zzBUTfP0hBDE3ay78des+0AIL0+S6xoJumtahsDk9oxgFR0wLpD2TQ6y8Kz5dOt6d+J4sMJWHl+bK/yHaMQ/M9Ai6Fg3pVAOYCgPdukVzOhOfTwiIM11iTivn7lIuAzVs8s2C65l17OwVz7EaQph8Bw82nA66n6aEwJWqmuF7kc6SWBGAbHIpZ0I64Q06IMXDJU4QCXLuGyTm4lZGW/VqEW/lkbHjW5mVCamdJTwjTKOS/DeDxgJ1Am/9TxAwMSHT0lhebYMaQ4MeYcp8P2dEcnOIo0pbi6Fnc5HaqHZcSx6erRAWzn93qON1EUVjasQR8GEAU8ntLxccTYJ6AUzi+jqB3hx2SdA9ldwtaGDQvKNhp1jW2O2kEvz9RJpqIXFm3Mhhyyfy5lR1ZQd4LmVFMs6ns3IE7Art29wMkJpWg3w6XlNhAxjxdNDacsVpyjwBYhYzgZF7HAp/MtPucc2OJkVvtJDylaGK0ryNg+UjLvINyImlkTtbXwC4PpcKbYamyGgXg=
 install:
+- echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin
 - pip install -r requirements.txt
 script:
 - python -m unittest discover
+after_success:
+- |
+  if [[ $(python --version | cut -d' ' -f 2) = 3.6* ]]; then
+      docker build -t spectre-visualization .
+      docker images
+      if [ $TRAVIS_PULL_REQUEST = "false" ]; then
+          if [ $TRAVIS_BRANCH = "master" ]; then
+              docker tag spectre-visualization spectreteam/spectre-visualization:latest
+              docker push spectreteam/spectre-visualization:latest
+          elif [ $TRAVIS_BRANCH = "develop" ]; then
+              docker tag spectre-visualization spectreteam/spectre-visualization:beta
+              docker push spectreteam/spectre-visualization:beta
+          fi
+          docker tag spectre-visualization spectreteam/spectre-visualization:$VERSION.$TRAVIS_BUILD_NUMBER
+          docker push spectreteam/spectre-visualization:$VERSION.$TRAVIS_BUILD_NUMBER
+      fi
+  fi
 notifications:
   webhooks:
     urls:
