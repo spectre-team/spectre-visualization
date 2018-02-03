@@ -35,3 +35,10 @@ Heatmap = NamedTuple('Heatmap', [
     ('X', List[int]),
     ('Y', List[int])
 ])
+Spectrum = NamedTuple('Spectrum', [
+    ('Id', int),
+    ('Intensities', List[float]),
+    ('Mz', List[float]),
+    ('X', int),
+    ('Y', int)
+])
