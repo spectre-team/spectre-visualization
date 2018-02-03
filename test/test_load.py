@@ -49,3 +49,19 @@ class TestMetadataLoading(unittest.TestCase):
         self.assertEqual(metadata.XRange["Max"], 2)
         self.assertEqual(metadata.YRange["Min"], 0)
         self.assertEqual(metadata.YRange["Max"], 1)
+
+
+@patch.object(builtins, 'open', new=mock_open(read_data=simplified_result))
+@patch.object(load, 'dataset', new=MagicMock(return_value=simplified_dataset))
+@patch.object(discover, 'name', new=MagicMock(return_value="blah"))
+@patch.object(discover, 'datasets', new=MagicMock(return_value=datasets))
+@patch.object(discover, 'divik', new=MagicMock(return_value=["wololo"]))
+class TestDivikResultLoading(unittest.TestCase):
+    def test_parses_partition_from_result(self):
+        result = load.divik_result(123, 456)
+        self.assertEqual(result.Data, [2, 0, 0, 1, 1])
+
+    def test_parses_coordinates_from_dataset(self):
+        result = load.divik_result(123, 456)
+        self.assertEqual(result.X, [0, 1, 0, 1, 2])
+        self.assertEqual(result.Y, [0, 0, 1, 1, 1])
