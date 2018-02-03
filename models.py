@@ -24,3 +24,8 @@ class DatasetMetadata(object):
         self.XRange = vars(x_range)
         self.YRange = vars(y_range)
 
+
+DivikResult = NamedTuple('DivikResult', [
+    ('X', List[int]), ('Y', List[int]),
+    ('Data', List[int])
+])
