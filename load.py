@@ -23,3 +23,19 @@ def dataset(name: Name) -> spdata.types.Dataset:
     """
     with open(discover.data_path(name)) as data_file:
         return spdata.reader.load_txt(data_file)
+
+
+@lru_cache(maxsize=128)
+def metadata(name: Name) -> models.DatasetMetadata:
+    """Load dataset metadata by dataset name
+
+    :param name: name of the dataset
+    :return: metadata of the dataset
+    """
+    dataset_id = name_to_id(name)
+    data = dataset(name)
+    spectra_number = data.spectra.shape[0]
+    x_range = models.CoordinatesRange(data.coordinates.x)
+    y_range = models.CoordinatesRange(data.coordinates.y)
+    return models.DatasetMetadata(dataset_id, name, spectra_number, x_range,
+                                  y_range)
