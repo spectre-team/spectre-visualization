@@ -18,3 +18,18 @@ def as_response(model: NamedTuple):
     """
     # noinspection PyProtectedMember
     return flask.jsonify(model._asdict())
+
+
+def missing_key_returns_404(fun):
+    """Handle missing identifiers by 404
+
+    :param fun: view that requires handling
+    :return: view with handling capabilities
+    """
+    @wraps(fun)
+    def wrapper(*args, **kwargs):
+        try:
+            return fun(*args, **kwargs)
+        except discover.UnknownIdError:
+            flask.abort(404)
+    return wrapper
