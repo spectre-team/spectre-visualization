@@ -102,3 +102,12 @@ class TestSpectrumLookup(unittest.TestCase):
     def test_throws_if_coordinates_do_not_exist(self):
         with self.assertRaises(KeyError):
             load._find_spectrum(self.coordinates, 4, 1)
+
+
+@patch.object(load, 'dataset', new=MagicMock(return_value=simplified_dataset))
+@patch.object(discover, 'datasets', new=MagicMock(return_value=datasets))
+@patch.object(discover, 'name', new=MagicMock(return_value="blah"))
+class TestSpectrumLoading(unittest.TestCase):
+    def test_loads_spectrum_of_given_coordinates(self):
+        spectrum = load.spectrum(123, 1, 0)
+        self.assertEqual(spectrum.Intensities, [21, 22, 23, 24, 25])

@@ -108,3 +108,18 @@ def _find_spectrum(coordinates: spdata.types.Coordinates,
     if len(matching_indexes) < 1:
         raise KeyError((x, y))
     return matching_indexes[0]
+
+
+def spectrum(dataset_id: int, x: int, y: int) -> models.Spectrum:
+    """Load spectrum from dataset by its coordinates
+
+    :param dataset_id: id of dataset
+    :param x: x-coordinate of spot
+    :param y: y-coordinate of spot
+    :return: spectrum at given coordinates
+    """
+    dataset_name = discover.name(dataset_id, discover.datasets())
+    data = dataset(dataset_name)
+    spectrum_id = _find_spectrum(data.coordinates, x, y)
+    return models.Spectrum(Id=spectrum_id, Mz=data.mz, X=x, Y=y,
+                           Intensities=list(data.spectra[spectrum_id]))
