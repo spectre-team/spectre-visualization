@@ -55,3 +55,12 @@ def datasets() -> List[str]:
     :return: list of available datasets
     """
     return os.listdir(DATA_ROOT)
+
+
+def data_path(dataset_name: Name) -> Path:
+    """Discover path to dataset
+
+    :param dataset_name: name of the dataset
+    :return: path to the dataset file
+    """
+    return os.path.join(DATA_ROOT, dataset_name, 'text_data', 'data.txt')
