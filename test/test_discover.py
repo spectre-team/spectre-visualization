@@ -39,3 +39,10 @@ class TestDivikDiscovery(unittest.TestCase):
     def test_queries_divik_directory(self, mock):
         discover.divik("blah")
         self.assertIn("divik", mock.call_args[0][0])
+
+
+@patch.object(os, 'listdir', autospec=True)
+class TestDatasetDiscovery(unittest.TestCase):
+    def test_checks_default_store(self, mock):
+        discover.datasets()
+        self.assertIn(discover.DATA_ROOT, mock.call_args[0][0])

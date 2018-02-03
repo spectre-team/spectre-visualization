@@ -47,3 +47,11 @@ def divik(dataset_name: Name) -> List[Name]:
     :return: list of available divik analyses
     """
     return os.listdir(os.path.join(DATA_ROOT, dataset_name, 'divik'))
+
+
+def datasets() -> List[str]:
+    """Discover available datasets in default store
+
+    :return: list of available datasets
+    """
+    return os.listdir(DATA_ROOT)
