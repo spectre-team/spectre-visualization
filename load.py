@@ -75,3 +75,18 @@ def divik_config(dataset_id: int, divik_id: int) -> str:
     with open(path) as result_file:
         result = result_file.read()
     return result
+
+
+def heatmap(dataset_id: int, channel_id: int) -> models.Heatmap:
+    """Load heatmap from dataset by mass channel id
+
+    :param dataset_id: id of dataset
+    :param channel_id: id of mass channel
+    :return: heatmap for given channel
+    """
+    dataset_name = discover.name(dataset_id, discover.datasets())
+    data = dataset(dataset_name)
+    return models.Heatmap(data.mz[channel_id],
+                          list(data.spectra[:, channel_id]),
+                          data.coordinates.x,
+                          data.coordinates.y)

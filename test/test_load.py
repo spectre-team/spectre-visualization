@@ -75,3 +75,16 @@ class TestDivikConfigLoading(unittest.TestCase):
     def test_passes_content_without_any_processing(self):
         config = load.divik_config(123, 456)
         self.assertEqual(config, some_config)
+
+
+@patch.object(load, 'dataset', new=MagicMock(return_value=simplified_dataset))
+@patch.object(discover, 'datasets', new=MagicMock(return_value=datasets))
+@patch.object(discover, 'name', new=MagicMock(return_value="blah"))
+class TestHeatmapLoading(unittest.TestCase):
+    def test_throws_when_channel_does_not_exist(self):
+        with self.assertRaises(IndexError):
+            load.heatmap(123, channel_id=123456789)
+
+    def test_loads_given_channel(self):
+        heatmap = load.heatmap(123, channel_id=1)
+        self.assertEqual(heatmap.Intensities, [12, 22, 32, 42, 52])
