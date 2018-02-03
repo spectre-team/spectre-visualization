@@ -28,3 +28,14 @@ class TestNameDiscovery(unittest.TestCase):
     def test_throws_for_nonexistent_name(self):
         with self.assertRaises(discover.UnknownIdError):
             discover.name(123, some_names)
+
+
+@patch.object(os, 'listdir', autospec=True)
+class TestDivikDiscovery(unittest.TestCase):
+    def test_queries_dataset_directory(self, mock):
+        discover.divik("blah")
+        self.assertIn("blah", mock.call_args[0][0])
+
+    def test_queries_divik_directory(self, mock):
+        discover.divik("blah")
+        self.assertIn("divik", mock.call_args[0][0])

@@ -38,3 +38,12 @@ def name(element_id: int, names: List[Name]) -> Name:
     if len(matching) == 0:
         raise UnknownIdError(element_id)
     return matching[0]
+
+
+def divik(dataset_name: Name) -> List[Name]:
+    """Discover available divik analyses for a dataset
+
+    :param dataset_name: name of the dataset under analysis
+    :return: list of available divik analyses
+    """
+    return os.listdir(os.path.join(DATA_ROOT, dataset_name, 'divik'))
