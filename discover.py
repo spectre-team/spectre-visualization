@@ -19,3 +19,22 @@ def name_to_id(entity_name: str) -> int:
     :return: unique identifier
     """
     return int(hashlib.sha256(entity_name.encode()).hexdigest(), 16)
+
+
+class UnknownIdError(KeyError):
+    """Thrown when id of element could not be resolved"""
+    pass
+
+
+def name(element_id: int, names: List[Name]) -> Name:
+    """Resolve element name by its id
+
+    :param element_id: id of the element in names list
+    :param names: names list
+    :return: name of the element under given id
+    """
+    matching = [_name for _name in names
+                if name_to_id(_name) == element_id]
+    if len(matching) == 0:
+        raise UnknownIdError(element_id)
+    return matching[0]
