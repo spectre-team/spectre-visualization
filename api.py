@@ -33,3 +33,15 @@ def missing_key_returns_404(fun):
         except discover.UnknownIdError:
             flask.abort(404)
     return wrapper
+
+
+@app.route('/preparations/')
+@app.route('/preparations/<int:dataset_id>')
+@missing_key_returns_404
+def preparations(dataset_id: int=None):
+    if dataset_id is None:
+        return flask.jsonify([
+            vars(load.metadata(name)) for name in discover.datasets()
+        ])
+    dataset_name = discover.name(dataset_id, discover.datasets())
+    return flask.jsonify(vars(load.metadata(dataset_name)))
