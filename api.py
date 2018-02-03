@@ -64,3 +64,11 @@ def divik(dataset_id: int):
 def heatmap(dataset_id: int):
     channel_id = require('channelId', int)
     return as_response(load.heatmap(dataset_id, channel_id))
+
+
+@app.route('/spectrum/<int:dataset_id>')
+@missing_key_returns_404
+def spectrum(dataset_id: int):
+    x = require('x', int)
+    y = require('y', int)
+    return as_response(load.spectrum(dataset_id, x, y))

@@ -130,3 +130,35 @@ class TestHeatmap(ApiTestCase):
         response = self.app.get(self.url)
         self.assertIn(b'"X": ', response.data)
         self.assertIn(b'"Y": ', response.data)
+
+
+spectrum_loading = MagicMock(side_effect=lambda _, x, y: models.Spectrum(
+    Intensities=[1., 2., 3.], Id=1, Mz=[4., 5., 6.], X=x, Y=y))
+
+
+@patch.object(load, 'spectrum', new=spectrum_loading)
+class TestSpectrum(ApiTestCase):
+    url = '/spectrum/123?x=8&y=9'
+
+    def test_throws_404_without_coordinates(self):
+        response = self.app.get('/spectrum/123?x=8')
+        self.assertEqual(response.status_code, 404)
+        response = self.app.get('/spectrum/123?y=9')
+        self.assertEqual(response.status_code, 404)
+
+    def test_has_id(self):
+        response = self.app.get(self.url)
+        self.assertIn(b'"Id": 1', response.data)
+
+    def test_has_intensities(self):
+        response = self.app.get(self.url)
+        self.assertIn(b'"Intensities": ', response.data)
+
+    def test_has_mz(self):
+        response = self.app.get(self.url)
+        self.assertIn(b'"Mz": ', response.data)
+
+    def test_has_coordinates(self):
+        response = self.app.get(self.url)
+        self.assertIn(b'"X": 8', response.data)
+        self.assertIn(b'"Y": 9', response.data)
