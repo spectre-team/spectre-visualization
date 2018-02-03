@@ -57,3 +57,10 @@ def divik(dataset_id: int):
         return load.divik_config(dataset_id, divik_id)
     # unused for a while, informs that result was requested
     return as_response(load.divik_result(dataset_id, divik_id))
+
+
+@app.route('/heatmap/<int:dataset_id>')
+@missing_key_returns_404
+def heatmap(dataset_id: int):
+    channel_id = require('channelId', int)
+    return as_response(load.heatmap(dataset_id, channel_id))

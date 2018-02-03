@@ -108,3 +108,25 @@ class TestDivikConfig(ApiTestCase):
     def test_returns_404_when_divik_id_is_missing(self):
         response = self.app.get('/divikResult/123')
         self.assertEqual(response.status_code, 404)
+
+
+heatmap_loading = MagicMock(return_value=models.Heatmap(
+    Mz=1., Intensities=[1., 2., 3.], X=[1, 2, 3], Y=[4, 5, 6]))
+
+
+@patch.object(load, 'heatmap', new=heatmap_loading)
+class TestHeatmap(ApiTestCase):
+    url = '/heatmap/123?channelId=1'
+
+    def test_has_mz(self):
+        response = self.app.get(self.url)
+        self.assertIn(b'"Mz": ', response.data)
+
+    def test_has_intensities(self):
+        response = self.app.get(self.url)
+        self.assertIn(b'"Intensities": ', response.data)
+
+    def test_has_coordinates(self):
+        response = self.app.get(self.url)
+        self.assertIn(b'"X": ', response.data)
+        self.assertIn(b'"Y": ', response.data)
