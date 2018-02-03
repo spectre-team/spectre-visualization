@@ -45,3 +45,15 @@ def preparations(dataset_id: int=None):
         ])
     dataset_name = discover.name(dataset_id, discover.datasets())
     return flask.jsonify(vars(load.metadata(dataset_name)))
+
+
+@app.route('/divikResult/<int:dataset_id>')
+@missing_key_returns_404
+def divik(dataset_id: int):
+    divik_id = require('divikId', int)
+    level = optional('level', int)
+    if level is None:
+        # configuration was requested
+        return load.divik_config(dataset_id, divik_id)
+    # unused for a while, informs that result was requested
+    return as_response(load.divik_result(dataset_id, divik_id))
