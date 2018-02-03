@@ -65,3 +65,13 @@ class TestDivikResultLoading(unittest.TestCase):
         result = load.divik_result(123, 456)
         self.assertEqual(result.X, [0, 1, 0, 1, 2])
         self.assertEqual(result.Y, [0, 0, 1, 1, 1])
+
+
+@patch.object(builtins, 'open', new=mock_open(read_data=some_config))
+@patch.object(discover, 'name', new=MagicMock(return_value="blah"))
+@patch.object(discover, 'datasets', new=MagicMock(return_value=datasets))
+@patch.object(discover, 'divik', new=MagicMock(return_value=["wololo"]))
+class TestDivikConfigLoading(unittest.TestCase):
+    def test_passes_content_without_any_processing(self):
+        config = load.divik_config(123, 456)
+        self.assertEqual(config, some_config)

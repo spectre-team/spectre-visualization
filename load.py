@@ -60,3 +60,18 @@ def divik_result(dataset_id: int, divik_id: int) -> models.DivikResult:
     y = list(data.coordinates.y.ravel())
 
     return models.DivikResult(x, y, assignments)
+
+
+def divik_config(dataset_id: int, divik_id: int) -> str:
+    """Load config of divik by id
+
+    :param dataset_id: id of analyzed dataset
+    :param divik_id: id of divik analysis
+    :return: string containing JSON with divik options
+    """
+    dataset_name = discover.name(dataset_id, discover.datasets())
+    divik_name = discover.name(divik_id, discover.divik(dataset_name))
+    path = divik_result_path(dataset_name, divik_name)
+    with open(path) as result_file:
+        result = result_file.read()
+    return result
