@@ -90,3 +90,21 @@ def heatmap(dataset_id: int, channel_id: int) -> models.Heatmap:
                           list(data.spectra[:, channel_id]),
                           data.coordinates.x,
                           data.coordinates.y)
+
+
+def _find_spectrum(coordinates: spdata.types.Coordinates,
+                   x: int, y: int) -> int:
+    """Find index of spectrum by its coordinates
+
+    :param coordinates: coordinates of spectra in the dataset
+    :param x: x-coordinate of spot
+    :param y: y-coordinate of spot
+    :return: index of spectrum
+    """
+    matching_x = coordinates.x == x
+    matching_y = coordinates.y == y
+    matching_coordinates = np.logical_and(matching_x, matching_y)
+    matching_indexes = list(np.where(matching_coordinates.ravel())[0])
+    if len(matching_indexes) < 1:
+        raise KeyError((x, y))
+    return matching_indexes[0]

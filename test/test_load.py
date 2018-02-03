@@ -88,3 +88,17 @@ class TestHeatmapLoading(unittest.TestCase):
     def test_loads_given_channel(self):
         heatmap = load.heatmap(123, channel_id=1)
         self.assertEqual(heatmap.Intensities, [12, 22, 32, 42, 52])
+
+
+class TestSpectrumLookup(unittest.TestCase):
+    def setUp(self):
+        self.coordinates = spdata.types.Coordinates([1, 2, 3], [4, 5, 6],
+                                                    3 * [0])
+
+    def test_finds_id_of_spectrum_with_given_coordinates(self):
+        spectrum_id = load._find_spectrum(self.coordinates, 1, 4)
+        self.assertEqual(spectrum_id, 0)
+
+    def test_throws_if_coordinates_do_not_exist(self):
+        with self.assertRaises(KeyError):
+            load._find_spectrum(self.coordinates, 4, 1)
