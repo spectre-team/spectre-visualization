@@ -2,12 +2,14 @@ from typing import NamedTuple
 from functools import wraps
 
 import flask
+import flask_cors
 
 import discover
 import load
 from request_arguments import optional, require
 
 app = flask.Flask(__name__)
+flask_cors.CORS(app)
 
 
 def as_response(model: NamedTuple):
