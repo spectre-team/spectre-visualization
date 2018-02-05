@@ -89,6 +89,21 @@ class TestHeatmapLoading(unittest.TestCase):
         heatmap = load.heatmap(123, channel_id=1)
         self.assertEqual(heatmap.Intensities, [12, 22, 32, 42, 52])
 
+    def test_channel_is_list_of_floats(self):
+        heatmap = load.heatmap(123, channel_id=1)
+        self.assertIsInstance(heatmap.Intensities, list)
+        for element in heatmap.Intensities:
+            self.assertIsInstance(element, float)
+
+    def test_coordinates_are_lists_of_ints(self):
+        heatmap = load.heatmap(123, channel_id=1)
+        self.assertIsInstance(heatmap.X, list)
+        self.assertIsInstance(heatmap.Y, list)
+        for element in heatmap.X:
+            self.assertIsInstance(element, int)
+        for element in heatmap.Y:
+            self.assertIsInstance(element, int)
+
 
 class TestSpectrumLookup(unittest.TestCase):
     def setUp(self):

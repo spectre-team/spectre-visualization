@@ -88,8 +88,8 @@ def heatmap(dataset_id: int, channel_id: int) -> models.Heatmap:
     data = dataset(dataset_name)
     return models.Heatmap(data.mz[channel_id],
                           list(data.spectra[:, channel_id]),
-                          data.coordinates.x,
-                          data.coordinates.y)
+                          list(map(int, data.coordinates.x)),
+                          list(map(int, data.coordinates.y)))
 
 
 def _find_spectrum(coordinates: spdata.types.Coordinates,
