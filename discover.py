@@ -8,6 +8,8 @@ DATA_ROOT = os.path.join(_FILESYSTEM_ROOT, 'data')
 Name = str
 Path = str
 
+MAX_JAVASCRIPT_SAFE_INT = 2 ** 53 - 1
+
 
 @lru_cache(maxsize=1024)
 def name_to_id(entity_name: str) -> int:
@@ -18,7 +20,8 @@ def name_to_id(entity_name: str) -> int:
     :param entity_name: name of an object
     :return: unique identifier
     """
-    return int(hashlib.sha256(entity_name.encode()).hexdigest(), 16)
+    hex_hash = hashlib.sha256(entity_name.encode()).hexdigest()
+    return int(hex_hash, 16) % MAX_JAVASCRIPT_SAFE_INT
 
 
 class UnknownIdError(KeyError):
