@@ -118,6 +118,10 @@ class TestSpectrumLookup(unittest.TestCase):
         with self.assertRaises(KeyError):
             load._find_spectrum(self.coordinates, 4, 1)
 
+    def test_returns_simple_type(self):
+        spectrum_id = load._find_spectrum(self.coordinates, 1, 4)
+        self.assertIsInstance(spectrum_id, int)
+        
 
 @patch.object(load, 'dataset', new=MagicMock(return_value=simplified_dataset))
 @patch.object(discover, 'datasets', new=MagicMock(return_value=datasets))
@@ -126,3 +130,15 @@ class TestSpectrumLoading(unittest.TestCase):
     def test_loads_spectrum_of_given_coordinates(self):
         spectrum = load.spectrum(123, 1, 0)
         self.assertEqual(spectrum.Intensities, [21, 22, 23, 24, 25])
+
+    def test_mzs_is_list_of_floats(self):
+        spectrum = load.spectrum(123, 1, 0)
+        self.assertIsInstance(spectrum.Mz, list)
+        for element in spectrum.Mz:
+            self.assertIsInstance(element, float)
+
+    def test_intensities_is_list_of_floats(self):
+        spectrum = load.spectrum(123, 1, 0)
+        self.assertIsInstance(spectrum.Intensities, list)
+        for element in spectrum.Intensities:
+            self.assertIsInstance(element, float)
