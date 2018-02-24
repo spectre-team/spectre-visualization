@@ -43,15 +43,6 @@ def name(element_id: int, names: List[Name]) -> Name:
     return matching[0]
 
 
-def divik(dataset_name: Name) -> List[Name]:
-    """Discover available divik analyses for a dataset
-
-    :param dataset_name: name of the dataset under analysis
-    :return: list of available divik analyses
-    """
-    return os.listdir(os.path.join(DATA_ROOT, dataset_name, 'divik'))
-
-
 def datasets() -> List[str]:
     """Discover available datasets in default store
 
@@ -67,25 +58,3 @@ def data_path(dataset_name: Name) -> Path:
     :return: path to the dataset file
     """
     return os.path.join(DATA_ROOT, dataset_name, 'text_data', 'data.txt')
-
-
-def divik_config_path(dataset_name: Name, divik_name: Name) -> Path:
-    """Discover path to divik analysis config
-
-    :param dataset_name: name of analyzed dataset
-    :param divik_name: name of divik analysis
-    :return: path to analysis config file
-    """
-    return os.path.join(DATA_ROOT, dataset_name, 'divik', divik_name,
-                        'options.json')
-
-
-def divik_result_path(dataset_name: Name, divik_name: Name) -> Path:
-    """Discover path to divik analysis result
-
-    :param dataset_name: name of analyzed dataset
-    :param divik_name: name of divik analysis
-    :return: path to analysis result file
-    """
-    return os.path.join(DATA_ROOT, dataset_name, 'divik', divik_name,
-                        'result.json')

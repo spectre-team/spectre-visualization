@@ -51,32 +51,6 @@ class TestMetadataLoading(unittest.TestCase):
         self.assertEqual(metadata.YRange["Max"], 1)
 
 
-@patch.object(builtins, 'open', new=mock_open(read_data=simplified_result))
-@patch.object(load, 'dataset', new=MagicMock(return_value=simplified_dataset))
-@patch.object(discover, 'name', new=MagicMock(return_value="blah"))
-@patch.object(discover, 'datasets', new=MagicMock(return_value=datasets))
-@patch.object(discover, 'divik', new=MagicMock(return_value=["wololo"]))
-class TestDivikResultLoading(unittest.TestCase):
-    def test_parses_partition_from_result(self):
-        result = load.divik_result(123, 456)
-        self.assertEqual(result.Data, [2, 0, 0, 1, 1])
-
-    def test_parses_coordinates_from_dataset(self):
-        result = load.divik_result(123, 456)
-        self.assertEqual(result.X, [0, 1, 0, 1, 2])
-        self.assertEqual(result.Y, [0, 0, 1, 1, 1])
-
-
-@patch.object(builtins, 'open', new=mock_open(read_data=some_config))
-@patch.object(discover, 'name', new=MagicMock(return_value="blah"))
-@patch.object(discover, 'datasets', new=MagicMock(return_value=datasets))
-@patch.object(discover, 'divik', new=MagicMock(return_value=["wololo"]))
-class TestDivikConfigLoading(unittest.TestCase):
-    def test_passes_content_without_any_processing(self):
-        config = load.divik_config(123, 456)
-        self.assertEqual(config, some_config)
-
-
 @patch.object(load, 'dataset', new=MagicMock(return_value=simplified_dataset))
 @patch.object(discover, 'datasets', new=MagicMock(return_value=datasets))
 @patch.object(discover, 'name', new=MagicMock(return_value="blah"))
@@ -121,7 +95,7 @@ class TestSpectrumLookup(unittest.TestCase):
     def test_returns_simple_type(self):
         spectrum_id = load._find_spectrum(self.coordinates, 1, 4)
         self.assertIsInstance(spectrum_id, int)
-        
+
 
 @patch.object(load, 'dataset', new=MagicMock(return_value=simplified_dataset))
 @patch.object(discover, 'datasets', new=MagicMock(return_value=datasets))

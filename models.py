@@ -25,10 +25,6 @@ class DatasetMetadata(object):
         self.YRange = vars(y_range)
 
 
-DivikResult = NamedTuple('DivikResult', [
-    ('X', List[int]), ('Y', List[int]),
-    ('Data', List[int])
-])
 Heatmap = NamedTuple('Heatmap', [
     ('Mz', float),
     ('Intensities', List[float]),
